@@ -13,8 +13,18 @@
         <p class="sub">
           This site pulls games from
           <span class="mono">zigz0g/3kh0-assets</span> and serves them through
-          jsDelivr CDN.
+          glcdn.githack CDN.
         </p>
+        <div class="toolbar">
+          <label for="cleverness-select" class="toolbar-label">Cleverness</label>
+          <select id="cleverness-select" class="select">
+            <option value="off">Off</option>
+            <option value="on">On</option>
+          </select>
+          <button type="button" id="surprise-btn" class="button secondary">
+            Surprise me
+          </button>
+        </div>
       </header>
 
       <section class="card">
@@ -61,6 +71,10 @@
       const linkEl = document.getElementById("active-game-link");
       const statusEl = document.getElementById("library-status");
       const gridEl = document.getElementById("games-grid");
+      const clevernessEl = document.getElementById("cleverness-select");
+      const surpriseBtnEl = document.getElementById("surprise-btn");
+      let allFolders = [];
+      let currentFolders = [];
 
       function gameUrl(folder) {
         return `${CDN_BASE}/${encodeURIComponent(folder)}/index.html`;
@@ -70,6 +84,33 @@
         return folder
           .replace(/[-_]+/g, " ")
           .replace(/\b\w/g, (letter) => letter.toUpperCase());
+      }
+
+      function cleverScore(folder) {
+        const lower = folder.toLowerCase();
+        let score = 0;
+        if (/\d/.test(lower)) score += 1;
+        if (lower.includes("run")) score += 4;
+        if (lower.includes("mario")) score += 4;
+        if (lower.includes("minecraft")) score += 4;
+        if (lower.includes("cookie")) score += 3;
+        if (lower.includes("2048")) score += 3;
+        if (lower.includes("basket")) score += 2;
+        if (lower.includes("tank")) score += 2;
+        if (lower.includes("doom")) score += 2;
+        if (lower.length <= 10) score += 1;
+        return score;
+      }
+
+      function sortedFolders(folders) {
+        if (clevernessEl.value !== "on") {
+          return [...folders];
+        }
+        return [...folders].sort((a, b) => {
+          const diff = cleverScore(b) - cleverScore(a);
+          if (diff !== 0) return diff;
+          return a.localeCompare(b);
+        });
       }
 
       function loadGame(folder) {
@@ -106,8 +147,10 @@
       }
 
       function renderGameButtons(folders) {
+        const visibleFolders = sortedFolders(folders);
+        currentFolders = visibleFolders;
         gridEl.innerHTML = "";
-        folders.forEach((folder, index) => {
+        visibleFolders.forEach((folder, index) => {
           const card = document.createElement("article");
           card.className = "game-card";
 
@@ -144,6 +187,12 @@
         });
       }
 
+      function surprisePick() {
+        if (!currentFolders.length) return;
+        const pick = currentFolders[Math.floor(Math.random() * currentFolders.length)];
+        loadGame(pick);
+      }
+
       async function init() {
         try {
           const folders = await fetchGameFolders();
@@ -153,13 +202,20 @@
             return;
           }
           statusEl.textContent = `Loaded ${folders.length} games from ${REPO_PATH}.`;
+          allFolders = folders;
           renderGameButtons(folders);
         } catch (error) {
           console.error(error);
           statusEl.textContent = "Could not read GitLab API. Showing a fallback game.";
-          renderGameButtons(["2048"]);
+          allFolders = ["2048"];
+          renderGameButtons(allFolders);
         }
       }
+
+      clevernessEl.addEventListener("change", () => {
+        renderGameButtons(allFolders.length ? allFolders : ["2048"]);
+      });
+      surpriseBtnEl.addEventListener("click", surprisePick);
 
       init();
     </script>
