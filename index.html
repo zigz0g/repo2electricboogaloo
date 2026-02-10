@@ -3,71 +3,166 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Embedded Game Test (3kh0 Assets)</title>
+    <title>Game Hub (GitLab Library)</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="page">
       <header class="header">
-        <h1>Embedded Game Test</h1>
+        <h1>Game Hub</h1>
         <p class="sub">
-          This page is loading a game from the
-          <span class="mono">3kh0-assets</span> CDN using an
-          <code>&lt;iframe&gt;</code>.
+          This site pulls games from
+          <span class="mono">zigz0g/3kh0-assets</span> and serves them through
+          jsDelivr CDN.
         </p>
       </header>
 
       <section class="card">
         <div class="card-header">
           <div>
-            <h2>2048 (from 3kh0-assets)</h2>
-            <p class="hint">
-              If you see the 2048 game below and can play it, embedding works.
-            </p>
+            <h2 id="active-game-title">Loading games...</h2>
+            <p class="hint">Pick a game from the library below.</p>
           </div>
           <a
             class="link"
-            href="https://raw.githack.com/3kh0/3kh0-assets/main/2048/index.html"
+            id="active-game-link"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Open directly
+            Open game in new tab
           </a>
         </div>
 
         <div class="frame-wrapper">
-          <iframe
-            src="https://raw.githack.com/3kh0/3kh0-assets/main/2048/index.html"
-            title="2048 (3kh0-assets)"
-            loading="lazy"
-            allowfullscreen
-          ></iframe>
+          <iframe id="game-frame" title="Embedded game player" loading="lazy" allowfullscreen></iframe>
         </div>
       </section>
 
-      <section class="card small">
-        <h2>How to embed other games</h2>
-        <ol class="steps">
-          <li>
-            Find the folder name of the game you want (for example:
-            <span class="mono">2048</span>).
-          </li>
-          <li>
-            Build the URL:
-            <span class="mono"
-              >https://raw.githack.com/3kh0/3kh0-assets/main/&lt;FOLDER&gt;/index.html</span
-            >
-          </li>
-          <li>
-            Use it in an iframe:
-            <span class="mono"
-              >&lt;iframe src=".../FOLDER/index.html"&gt;&lt;/iframe&gt;</span
-            >
-          </li>
-        </ol>
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2>Games library</h2>
+            <p class="hint" id="library-status">Reading game folders from GitLab...</p>
+          </div>
+        </div>
+        <div class="library-grid" id="games-grid"></div>
       </section>
     </main>
+
+    <script>
+      const REPO_PATH = "zigz0g/3kh0-assets";
+      const BRANCH = "main";
+      const CDN_BASE = `https://cdn.jsdelivr.net/gl/${REPO_PATH}@${BRANCH}`;
+      const API_BASE = `https://gitlab.com/api/v4/projects/${encodeURIComponent(REPO_PATH)}/repository/tree`;
+
+      const frameEl = document.getElementById("game-frame");
+      const titleEl = document.getElementById("active-game-title");
+      const linkEl = document.getElementById("active-game-link");
+      const statusEl = document.getElementById("library-status");
+      const gridEl = document.getElementById("games-grid");
+
+      function gameUrl(folder) {
+        return `${CDN_BASE}/${encodeURIComponent(folder)}/index.html`;
+      }
+
+      function toLabel(folder) {
+        return folder
+          .replace(/[-_]+/g, " ")
+          .replace(/\b\w/g, (letter) => letter.toUpperCase());
+      }
+
+      function loadGame(folder) {
+        const label = toLabel(folder);
+        const url = gameUrl(folder);
+        titleEl.textContent = `${label} (from ${REPO_PATH})`;
+        linkEl.href = url;
+        frameEl.src = url;
+      }
+
+      async function fetchGameFolders() {
+        const rows = [];
+        for (let page = 1; page <= 10; page += 1) {
+          const response = await fetch(
+            `${API_BASE}?recursive=true&ref=${encodeURIComponent(BRANCH)}&per_page=100&page=${page}`
+          );
+          if (!response.ok) {
+            throw new Error(`GitLab API error: ${response.status}`);
+          }
+          const pageData = await response.json();
+          if (!Array.isArray(pageData) || pageData.length === 0) {
+            break;
+          }
+          rows.push(...pageData);
+          if (pageData.length < 100) {
+            break;
+          }
+        }
+
+        const folders = rows
+          .filter((entry) => entry.type === "blob" && /^[^/]+\/index\.html$/i.test(entry.path))
+          .map((entry) => entry.path.split("/")[0]);
+
+        return [...new Set(folders)].sort((a, b) => a.localeCompare(b));
+      }
+
+      function renderGameButtons(folders) {
+        gridEl.innerHTML = "";
+        folders.forEach((folder, index) => {
+          const card = document.createElement("article");
+          card.className = "game-card";
+
+          const title = document.createElement("h3");
+          title.textContent = toLabel(folder);
+
+          const folderTag = document.createElement("p");
+          folderTag.className = "folder-tag";
+          folderTag.textContent = folder;
+
+          const actions = document.createElement("div");
+          actions.className = "game-actions";
+
+          const playBtn = document.createElement("button");
+          playBtn.type = "button";
+          playBtn.className = "button";
+          playBtn.textContent = "Play in page";
+          playBtn.addEventListener("click", () => loadGame(folder));
+
+          const openLink = document.createElement("a");
+          openLink.className = "button secondary";
+          openLink.href = gameUrl(folder);
+          openLink.target = "_blank";
+          openLink.rel = "noopener noreferrer";
+          openLink.textContent = "Open tab";
+
+          actions.append(playBtn, openLink);
+          card.append(title, folderTag, actions);
+          gridEl.appendChild(card);
+
+          if (index === 0) {
+            loadGame(folder);
+          }
+        });
+      }
+
+      async function init() {
+        try {
+          const folders = await fetchGameFolders();
+          if (folders.length === 0) {
+            statusEl.textContent = "No top-level game folders with index.html were found.";
+            titleEl.textContent = "No games found";
+            return;
+          }
+          statusEl.textContent = `Loaded ${folders.length} games from ${REPO_PATH}.`;
+          renderGameButtons(folders);
+        } catch (error) {
+          console.error(error);
+          statusEl.textContent = "Could not read GitLab API. Showing a fallback game.";
+          renderGameButtons(["2048"]);
+        }
+      }
+
+      init();
+    </script>
   </body>
   </html>
-
-
