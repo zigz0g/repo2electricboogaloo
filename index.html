@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Embedded Game Test (3kh0 Assets)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>Embedded Game Test</h1>
+        <p class="sub">
+          This page is loading a game from the
+          <span class="mono">3kh0-assets</span> CDN using an
+          <code>&lt;iframe&gt;</code>.
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2>2048 (from 3kh0-assets)</h2>
+            <p class="hint">
+              If you see the 2048 game below and can play it, embedding works.
+            </p>
+          </div>
+          <a
+            class="link"
+            href="https://raw.githack.com/3kh0/3kh0-assets/main/2048/index.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open directly
+          </a>
+        </div>
+
+        <div class="frame-wrapper">
+          <iframe
+            src="https://raw.githack.com/3kh0/3kh0-assets/main/2048/index.html"
+            title="2048 (3kh0-assets)"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+
+      <section class="card small">
+        <h2>How to embed other games</h2>
+        <ol class="steps">
+          <li>
+            Find the folder name of the game you want (for example:
+            <span class="mono">2048</span>).
+          </li>
+          <li>
+            Build the URL:
+            <span class="mono"
+              >https://raw.githack.com/3kh0/3kh0-assets/main/&lt;FOLDER&gt;/index.html</span
+            >
+          </li>
+          <li>
+            Use it in an iframe:
+            <span class="mono"
+              >&lt;iframe src=".../FOLDER/index.html"&gt;&lt;/iframe&gt;</span
+            >
+          </li>
+        </ol>
+      </section>
+    </main>
+  </body>
+  </html>
+
+

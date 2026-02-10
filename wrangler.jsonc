@@ -1,0 +1,12 @@
+{
+  // Name of your Worker; can be anything, but using the repo name is convenient
+  "name": "repo2electricboogaloo",
+  // Use today's date or any recent date; this just pins the Workers runtime compatibility
+  "compatibility_date": "2026-02-10",
+  // Tell Wrangler to deploy this repo as a static assets site
+  "assets": {
+    "directory": "."
+  }
+}
+
+
