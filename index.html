@@ -15,16 +15,6 @@
           <span class="mono">zigz0g/3kh0-assets</span> and serves them through
           glcdn.githack CDN.
         </p>
-        <div class="toolbar">
-          <label for="cleverness-select" class="toolbar-label">Cleverness</label>
-          <select id="cleverness-select" class="select">
-            <option value="off">Off</option>
-            <option value="on">On</option>
-          </select>
-          <button type="button" id="surprise-btn" class="button secondary">
-            Surprise me
-          </button>
-        </div>
       </header>
 
       <section class="card">
@@ -42,6 +32,9 @@
           >
             Open game in new tab
           </a>
+          <button type="button" id="fullscreen-btn" class="button secondary">
+            Full screen
+          </button>
         </div>
 
         <div class="frame-wrapper">
@@ -69,12 +62,9 @@
       const frameEl = document.getElementById("game-frame");
       const titleEl = document.getElementById("active-game-title");
       const linkEl = document.getElementById("active-game-link");
+      const fullscreenBtnEl = document.getElementById("fullscreen-btn");
       const statusEl = document.getElementById("library-status");
       const gridEl = document.getElementById("games-grid");
-      const clevernessEl = document.getElementById("cleverness-select");
-      const surpriseBtnEl = document.getElementById("surprise-btn");
-      let allFolders = [];
-      let currentFolders = [];
 
       function gameUrl(folder) {
         return `${CDN_BASE}/${encodeURIComponent(folder)}/index.html`;
@@ -86,39 +76,22 @@
           .replace(/\b\w/g, (letter) => letter.toUpperCase());
       }
 
-      function cleverScore(folder) {
-        const lower = folder.toLowerCase();
-        let score = 0;
-        if (/\d/.test(lower)) score += 1;
-        if (lower.includes("run")) score += 4;
-        if (lower.includes("mario")) score += 4;
-        if (lower.includes("minecraft")) score += 4;
-        if (lower.includes("cookie")) score += 3;
-        if (lower.includes("2048")) score += 3;
-        if (lower.includes("basket")) score += 2;
-        if (lower.includes("tank")) score += 2;
-        if (lower.includes("doom")) score += 2;
-        if (lower.length <= 10) score += 1;
-        return score;
-      }
-
-      function sortedFolders(folders) {
-        if (clevernessEl.value !== "on") {
-          return [...folders];
-        }
-        return [...folders].sort((a, b) => {
-          const diff = cleverScore(b) - cleverScore(a);
-          if (diff !== 0) return diff;
-          return a.localeCompare(b);
-        });
-      }
-
       function loadGame(folder) {
         const label = toLabel(folder);
         const url = gameUrl(folder);
         titleEl.textContent = `${label} (from ${REPO_PATH})`;
         linkEl.href = url;
         frameEl.src = url;
+      }
+
+      async function openFullscreen() {
+        try {
+          if (frameEl.requestFullscreen) {
+            await frameEl.requestFullscreen();
+          }
+        } catch (error) {
+          console.error("Fullscreen failed", error);
+        }
       }
 
       async function fetchGameFolders() {
@@ -147,10 +120,8 @@
       }
 
       function renderGameButtons(folders) {
-        const visibleFolders = sortedFolders(folders);
-        currentFolders = visibleFolders;
         gridEl.innerHTML = "";
-        visibleFolders.forEach((folder, index) => {
+        folders.forEach((folder, index) => {
           const card = document.createElement("article");
           card.className = "game-card";
 
@@ -187,12 +158,6 @@
         });
       }
 
-      function surprisePick() {
-        if (!currentFolders.length) return;
-        const pick = currentFolders[Math.floor(Math.random() * currentFolders.length)];
-        loadGame(pick);
-      }
-
       async function init() {
         try {
           const folders = await fetchGameFolders();
@@ -202,20 +167,15 @@
             return;
           }
           statusEl.textContent = `Loaded ${folders.length} games from ${REPO_PATH}.`;
-          allFolders = folders;
           renderGameButtons(folders);
         } catch (error) {
           console.error(error);
           statusEl.textContent = "Could not read GitLab API. Showing a fallback game.";
-          allFolders = ["2048"];
-          renderGameButtons(allFolders);
+          renderGameButtons(["2048"]);
         }
       }
 
-      clevernessEl.addEventListener("change", () => {
-        renderGameButtons(allFolders.length ? allFolders : ["2048"]);
-      });
-      surpriseBtnEl.addEventListener("click", surprisePick);
+      fullscreenBtnEl.addEventListener("click", openFullscreen);
 
       init();
     </script>

@@ -15,7 +15,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .page {
@@ -23,6 +23,8 @@ body {
   max-width: 900px;
   padding: 18px;
   min-width: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .header {
@@ -111,6 +113,9 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 10px;
   min-width: 0;
+  max-height: 28vh;
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .game-card {
@@ -202,33 +207,10 @@ code {
   font-size: 0.86em;
 }
 
-.toolbar {
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.toolbar-label {
-  font-size: 0.85rem;
-  color: #cbd5e1;
-  font-weight: 600;
-}
-
-.select {
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e2e8f0;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-}
-
 @media (max-width: 640px) {
   .page {
     padding: 10px;
+    height: 100vh;
   }
 
   .header h1 {
@@ -241,6 +223,7 @@ code {
 
   .library-grid {
     grid-template-columns: 1fr;
+    max-height: 24vh;
   }
 }
 
