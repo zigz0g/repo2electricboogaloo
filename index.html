@@ -81,10 +81,10 @@
       }
 
       async function fetchGameFolders() {
-        const rows = [];
-        for (let page = 1; page <= 10; page += 1) {
+        const folders = [];
+        for (let page = 1; page <= 30; page += 1) {
           const response = await fetch(
-            `${API_BASE}?recursive=true&ref=${encodeURIComponent(BRANCH)}&per_page=100&page=${page}`
+            `${API_BASE}?ref=${encodeURIComponent(BRANCH)}&per_page=100&page=${page}`
           );
           if (!response.ok) {
             throw new Error(`GitLab API error: ${response.status}`);
@@ -93,16 +93,15 @@
           if (!Array.isArray(pageData) || pageData.length === 0) {
             break;
           }
-          rows.push(...pageData);
+          const trees = pageData
+            .filter((entry) => entry.type === "tree")
+            .map((entry) => entry.path)
+            .filter((path) => !path.startsWith("."));
+          folders.push(...trees);
           if (pageData.length < 100) {
             break;
           }
         }
-
-        const folders = rows
-          .filter((entry) => entry.type === "blob" && /^[^/]+\/index\.html$/i.test(entry.path))
-          .map((entry) => entry.path.split("/")[0]);
-
         return [...new Set(folders)].sort((a, b) => a.localeCompare(b));
       }
 
