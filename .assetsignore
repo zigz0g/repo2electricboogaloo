@@ -1,0 +1,6 @@
+# Exclude from Cloudflare Workers assets (avoids .git pack files >25 MiB limit)
+.git/
+node_modules/
+.env
+.wrangler/
+*.log

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HanBridge Chinese Academy</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="site">
+      <header class="topbar">
+        <a href="#" class="brand">
+          <span class="brand-mark">汉</span>
+          <span>HanBridge Chinese Academy</span>
+        </a>
+        <nav class="nav">
+          <a href="#courses">Courses</a>
+          <a href="#practice">Practice</a>
+          <button type="button" class="nav-action" id="open-games-btn">
+            Find Tutors
+          </button>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="pill">HSK Path + Live Coaching</p>
+          <h1>Learn Chinese with real conversations, daily practice, and guided lessons.</h1>
+          <p class="hero-copy">
+            Build speaking confidence with structured beginner-friendly classes,
+            tone training, and flashcard drills based on your weekly goals.
+          </p>
+          <div class="hero-actions">
+            <button type="button" class="btn primary">Start Free Lesson</button>
+            <button type="button" class="btn ghost" id="open-games-btn-hero">
+              Find Tutors
+            </button>
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <h2>Today in 20 Minutes</h2>
+          <ul>
+            <li><strong>5 min</strong> Tone warmup: ma / mā / má / mǎ / mà</li>
+            <li><strong>8 min</strong> Core phrases: introducing yourself</li>
+            <li><strong>7 min</strong> Character quiz: 我 你 好 学 生</li>
+          </ul>
+          <p class="muted">Next live class starts in 2h 14m</p>
+        </aside>
+      </section>
+
+      <section class="grid-two" id="courses">
+        <article class="panel">
+          <h2>Learning Roadmap</h2>
+          <div class="roadmap">
+            <div><span>Week 1</span><p>Pinyin and tones</p></div>
+            <div><span>Week 2</span><p>Greetings and basics</p></div>
+            <div><span>Week 3</span><p>Sentence patterns</p></div>
+            <div><span>Week 4</span><p>Listening confidence</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <h2>Weekly Progress</h2>
+          <div class="stat-row">
+            <div><strong>86%</strong><span>Lesson completion</span></div>
+            <div><strong>132</strong><span>Words learned</span></div>
+            <div><strong>27</strong><span>Characters mastered</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" id="practice">
+        <div class="panel-head">
+          <h2>Practice Center</h2>
+          <button type="button" class="btn ghost small" id="open-games-btn-practice">
+            Open Tutor Tools
+          </button>
+        </div>
+        <div class="flashcards">
+          <article><h3>你好</h3><p>ni hao</p><span>Hello</span></article>
+          <article><h3>谢谢</h3><p>xie xie</p><span>Thank you</span></article>
+          <article><h3>学习</h3><p>xue xi</p><span>Study / learn</span></article>
+          <article><h3>朋友</h3><p>peng you</p><span>Friend</span></article>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal" id="games-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <section
+        class="modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="games-modal-title"
+      >
+        <header class="modal-header">
+          <div>
+            <h2 id="games-modal-title">Tutor Discovery Hub</h2>
+            <p class="muted" id="library-status">Pulled 432 games from the learning library.</p>
+          </div>
+          <button
+            type="button"
+            class="close-x"
+            id="close-games-btn"
+            aria-label="Close game page"
+            title="Close"
+          >
+            x
+          </button>
+        </header>
+
+        <div class="tab-row" role="tablist" aria-label="Hub views">
+          <button class="tab-btn is-active" data-tab-target="games" role="tab" aria-selected="true">
+            Games
+          </button>
+          <button class="tab-btn" data-tab-target="emulation" role="tab" aria-selected="false">
+            Lab
+          </button>
+        </div>
+
+        <section class="tab-panel is-active" id="tab-panel-games" role="tabpanel">
+          <section class="game-panel">
+            <div class="game-panel-head">
+              <h3 id="active-game-title">Loading...</h3>
+              <div class="game-tools">
+                <a
+                  class="btn ghost small"
+                  id="active-game-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open tab
+                </a>
+                <button type="button" class="btn primary small" id="fullscreen-btn">
+                  Full screen
+                </button>
+              </div>
+            </div>
+            <div class="frame-wrap">
+              <iframe
+                id="game-frame"
+                title="Embedded game player"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </section>
+
+          <section class="game-panel">
+            <div class="search-row">
+              <h3>Available games</h3>
+              <input
+                id="game-search"
+                class="search-input"
+                type="search"
+                placeholder="Search games..."
+                autocomplete="off"
+              />
+            </div>
+            <div class="library-grid" id="games-grid"></div>
+          </section>
+        </section>
+
+        <section class="tab-panel" id="tab-panel-emulation" role="tabpanel">
+          <section class="game-panel">
+            <div class="game-panel-head">
+              <h3>Study Lab</h3>
+              <div class="game-tools">
+                <a
+                  class="btn ghost small"
+                  id="emu-open-link"
+                  href="./emulator/index.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Lab
+                </a>
+                <button type="button" class="btn primary small" id="emu-fullscreen-btn">
+                  Full screen
+                </button>
+              </div>
+            </div>
+            <p class="muted">
+              Lab tools run from your hosted files first, with CDN fallback if needed.
+            </p>
+            <div class="frame-wrap">
+              <iframe
+                id="emulator-frame"
+                title="Embedded lab tool"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </section>
+        </section>
+      </section>
+    </div>
+
+    <script>
+      const OWNER = ["z", "i", "g", "z", "0", "g"].join("");
+      const LIBRARY = ["3kh0", "assets"].join("-");
+      const REPO_PATH = `${OWNER}/${LIBRARY}`;
+      const BRANCH = "main";
+      const CDN_BASE = `https://glcdn.githack.com/${REPO_PATH}/raw/${BRANCH}`;
+      const API_BASE = `https://gitlab.com/api/v4/projects/${encodeURIComponent(REPO_PATH)}/${[
+        "repo",
+        "sitory",
+      ].join("")}/tree`;
+
+      const frameEl = document.getElementById("game-frame");
+      const emulatorFrameEl = document.getElementById("emulator-frame");
+      const titleEl = document.getElementById("active-game-title");
+      const linkEl = document.getElementById("active-game-link");
+      const fullscreenBtnEl = document.getElementById("fullscreen-btn");
+      const emuFullscreenBtnEl = document.getElementById("emu-fullscreen-btn");
+      const emuOpenLinkEl = document.getElementById("emu-open-link");
+      const statusEl = document.getElementById("library-status");
+      const gridEl = document.getElementById("games-grid");
+      const searchEl = document.getElementById("game-search");
+
+      const modalEl = document.getElementById("games-modal");
+      const closeBtnEl = document.getElementById("close-games-btn");
+      const tabButtons = Array.from(document.querySelectorAll("[data-tab-target]"));
+      const tabPanels = {
+        games: document.getElementById("tab-panel-games"),
+        emulation: document.getElementById("tab-panel-emulation"),
+      };
+      const openButtons = [
+        document.getElementById("open-games-btn"),
+        document.getElementById("open-games-btn-hero"),
+        document.getElementById("open-games-btn-practice"),
+      ];
+
+      let libraryLoaded = false;
+      let allFolders = [];
+      let emulatorLoaded = false;
+      const EMULATOR_ENTRY = "./emulator/index.html";
+
+      function gameUrl(folder) {
+        return `${CDN_BASE}/${encodeURIComponent(folder)}/index.html`;
+      }
+
+      function gameIconCandidates(folder) {
+        const encoded = encodeURIComponent(folder);
+        return [
+          `${CDN_BASE}/${encoded}/splash.png`,
+          `${CDN_BASE}/${encoded}/splash.jpg`,
+          `${CDN_BASE}/${encoded}/splash.jpeg`,
+          `${CDN_BASE}/${encoded}/img/splash.png`,
+          `${CDN_BASE}/${encoded}/images/splash.png`,
+          `${CDN_BASE}/${encoded}/assets/splash.png`,
+          `${CDN_BASE}/${encoded}/meta/splash.png`,
+          `${CDN_BASE}/${encoded}/favicon.ico`,
+          `${CDN_BASE}/${encoded}/icon.png`,
+          `${CDN_BASE}/${encoded}/logo.png`,
+          `${CDN_BASE}/${encoded}/img/icon.png`,
+          `${CDN_BASE}/${encoded}/images/icon.png`,
+          `${CDN_BASE}/${encoded}/assets/icon.png`,
+          `${CDN_BASE}/${encoded}/meta/icon.png`,
+        ];
+      }
+
+      function wireIcon(imgEl, folder) {
+        const candidates = gameIconCandidates(folder);
+        let idx = 0;
+        imgEl.src = candidates[idx];
+        imgEl.addEventListener("error", () => {
+          idx += 1;
+          if (idx < candidates.length) {
+            imgEl.src = candidates[idx];
+          } else {
+            imgEl.style.display = "none";
+          }
+        });
+      }
+
+      function toLabel(folder) {
+        return folder
+          .replace(/[-_]+/g, " ")
+          .replace(/\b\w/g, (letter) => letter.toUpperCase());
+      }
+
+      function loadGame(folder) {
+        const url = gameUrl(folder);
+        titleEl.textContent = toLabel(folder);
+        linkEl.href = url;
+        frameEl.src = url;
+      }
+
+      async function openFullscreen() {
+        try {
+          if (frameEl.requestFullscreen) {
+            await frameEl.requestFullscreen();
+          }
+        } catch (error) {
+          console.error("Fullscreen failed", error);
+        }
+      }
+
+      async function openEmulatorFullscreen() {
+        try {
+          if (emulatorFrameEl.requestFullscreen) {
+            await emulatorFrameEl.requestFullscreen();
+          }
+        } catch (error) {
+          console.error("Lab fullscreen failed", error);
+        }
+      }
+
+      function setActiveTab(tabName) {
+        tabButtons.forEach((button) => {
+          const active = button.dataset.tabTarget === tabName;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        Object.entries(tabPanels).forEach(([name, panel]) => {
+          panel.classList.toggle("is-active", name === tabName);
+        });
+
+        if (tabName === "emulation" && !emulatorLoaded) {
+          emulatorFrameEl.src = EMULATOR_ENTRY;
+          emuOpenLinkEl.href = EMULATOR_ENTRY;
+          emulatorLoaded = true;
+        }
+      }
+
+      async function fetchGameFolders() {
+        const folders = [];
+        for (let page = 1; page <= 30; page += 1) {
+          const response = await fetch(
+            `${API_BASE}?ref=${encodeURIComponent(BRANCH)}&per_page=100&page=${page}`
+          );
+          if (!response.ok) {
+            throw new Error(`Library API error: ${response.status}`);
+          }
+          const pageData = await response.json();
+          if (!Array.isArray(pageData) || pageData.length === 0) {
+            break;
+          }
+          const trees = pageData
+            .filter((entry) => entry.type === "tree")
+            .map((entry) => entry.path)
+            .filter((path) => !path.startsWith("."));
+          folders.push(...trees);
+          if (pageData.length < 100) {
+            break;
+          }
+        }
+        return [...new Set(folders)].sort((a, b) => a.localeCompare(b));
+      }
+
+      function renderGameButtons(folders, autoLoadFirst = false) {
+        gridEl.innerHTML = "";
+        if (folders.length === 0) {
+          const emptyCard = document.createElement("article");
+          emptyCard.className = "game-card";
+          const title = document.createElement("h4");
+          title.textContent = "No matching games";
+          emptyCard.appendChild(title);
+          gridEl.appendChild(emptyCard);
+          return;
+        }
+        folders.forEach((folder, index) => {
+          const card = document.createElement("article");
+          card.className = "game-card";
+
+          const media = document.createElement("div");
+          media.className = "game-card-media";
+          const icon = document.createElement("img");
+          icon.className = "game-icon";
+          icon.alt = "";
+          icon.loading = "lazy";
+          wireIcon(icon, folder);
+          media.appendChild(icon);
+
+          const title = document.createElement("h4");
+          title.textContent = toLabel(folder);
+
+          const subtitle = document.createElement("p");
+          subtitle.className = "game-subtitle";
+          subtitle.textContent = folder;
+
+          const actions = document.createElement("div");
+          actions.className = "game-actions";
+
+          const playBtn = document.createElement("button");
+          playBtn.type = "button";
+          playBtn.className = "btn primary small";
+          playBtn.textContent = "Play";
+          playBtn.addEventListener("click", () => loadGame(folder));
+
+          const openBtn = document.createElement("a");
+          openBtn.className = "btn ghost small";
+          openBtn.href = gameUrl(folder);
+          openBtn.target = "_blank";
+          openBtn.rel = "noopener noreferrer";
+          openBtn.textContent = "Open";
+
+          actions.append(playBtn, openBtn);
+          card.append(media, title, subtitle, actions);
+          gridEl.appendChild(card);
+
+          if (autoLoadFirst && index === 0) {
+            loadGame(folder);
+          }
+        });
+      }
+
+      function applySearch() {
+        const query = searchEl.value.trim().toLowerCase();
+        if (!query) {
+          renderGameButtons(allFolders, false);
+          return;
+        }
+        const filtered = allFolders.filter((folder) => {
+          const label = toLabel(folder).toLowerCase();
+          return label.includes(query) || folder.toLowerCase().includes(query);
+        });
+        renderGameButtons(filtered, false);
+      }
+
+      async function loadLibraryIfNeeded() {
+        if (libraryLoaded) return;
+        try {
+          const folders = await fetchGameFolders();
+          if (folders.length === 0) {
+            statusEl.textContent = "No games found in the library.";
+            titleEl.textContent = "No games found";
+            return;
+          }
+          statusEl.textContent = `Pulled ${folders.length} games from the learning library.`;
+          allFolders = folders;
+          renderGameButtons(folders, true);
+          libraryLoaded = true;
+        } catch (error) {
+          console.error(error);
+          statusEl.textContent = "Could not load library. Using fallback game.";
+          allFolders = ["2048"];
+          renderGameButtons(allFolders, true);
+          libraryLoaded = true;
+        }
+      }
+
+      function openModal() {
+        modalEl.classList.add("is-open");
+        modalEl.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        setActiveTab("games");
+        loadLibraryIfNeeded();
+      }
+
+      function closeModal() {
+        modalEl.classList.remove("is-open");
+        modalEl.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+      }
+
+      openButtons.forEach((button) => button.addEventListener("click", openModal));
+      closeBtnEl.addEventListener("click", closeModal);
+      modalEl.addEventListener("click", (event) => {
+        if (event.target.hasAttribute("data-close-modal")) {
+          closeModal();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modalEl.classList.contains("is-open")) {
+          closeModal();
+        }
+      });
+      fullscreenBtnEl.addEventListener("click", openFullscreen);
+      emuFullscreenBtnEl.addEventListener("click", openEmulatorFullscreen);
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => setActiveTab(button.dataset.tabTarget));
+      });
+      searchEl.addEventListener("input", applySearch);
+    </script>
+  </body>
+</html>

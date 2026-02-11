@@ -1,11 +1,11 @@
 {
-  // Name of your Worker; can be anything, but using the repo name is convenient
-  "name": "repo2electricboogaloo",
+  // Worker name; must match CI (e.g. Cloudflare Pages) expectations
+  "name": "chineselearning",
   // Use today's date or any recent date; this just pins the Workers runtime compatibility
   "compatibility_date": "2026-02-10",
-  // Tell Wrangler to deploy this repo as a static assets site
+  // Deploy only the static assets folder (avoids .git and repo root)
   "assets": {
-    "directory": "."
+    "directory": "./public"
   }
 }
 
