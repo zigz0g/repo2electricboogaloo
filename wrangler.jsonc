@@ -1,6 +1,6 @@
 {
   // Worker name; must match CI (e.g. Cloudflare Pages) expectations
-  "name": "chineselearning",
+  "name": "chineselessons",
   // Use today's date or any recent date; this just pins the Workers runtime compatibility
   "compatibility_date": "2026-02-10",
   // Deploy only the static assets folder (avoids .git and repo root)
